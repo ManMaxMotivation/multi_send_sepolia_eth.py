@@ -4,6 +4,7 @@ import os
 import time
 import logging
 from decimal import Decimal
+import random  # Добавим импорт random для задержки
 
 # Настройка логирования
 logging.basicConfig(
@@ -87,6 +88,10 @@ def send_eth(recipient_address, amount_in_eth):
         tx_hash = web3.eth.send_raw_transaction(signed_tx.raw_transaction)
         logging.info(f"Транзакция отправлена с хэшем: {web3.to_hex(tx_hash)}")
 
+        # Добавляем случайную задержку между 0.9 и 2 секундами
+        random_delay = random.uniform(0.9, 2.0)
+        logging.info(f"Задержка перед следующей транзакцией: {random_delay:.2f} секунд.")
+        time.sleep(random_delay)  # Добавляем задержку
 
         # Возвращаем хэш транзакции для последующей проверки
         return tx_hash
@@ -213,19 +218,7 @@ if confirmation.lower() == "ok":
     # Получаем остаточный баланс отправителя после всех транзакций
     final_balance = web3.from_wei(web3.eth.get_balance(sender_address), 'ether')
     formatted_final_balance = "{:,.6f}".format(final_balance)
-
-    # Итоговый отчет
-    total_transactions = len(transaction_hashes)
-    total_eth_sent = total_transactions * amount_in_eth
-    total_addresses = len(addresses)
-
-    elapsed_time = time.time() - start_time  # Время выполнения
-
-    logging.info(f"\nИтоговый отчет:")
-    logging.info(f"Количество отправленных транзакций: {total_transactions}")
-    logging.info(f"Общее количество отправленного ETH: {total_eth_sent:.6f}")
-    logging.info(f"Количество адресов в списке: {total_addresses}")
-    logging.info(f"Остаток на балансе после завершения: {formatted_final_balance} ETH")
-    logging.info(f"Время выполнения: {elapsed_time:.2f} секунд")
+    logging.info(f"Все транзакции завершены. Остаток на балансе отправителя: {formatted_final_balance} ETH")
+    logging.info(f"Время выполнения всех транзакций: {time.time() - start_time:.2f} секунд.")
 else:
-    logging.info("Запуск отменен.")
+    logging.warning("Операция отменена.")
