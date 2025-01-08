@@ -33,7 +33,7 @@
 
 1. Клонируйте репозиторий:
    ```bash
-git clone https://github.com/yourusername/multi-send-eth.git
+   git clone https://github.com/yourusername/multi-send-eth.git
 
 ## Установите зависимости:
 pip install -r requirements.txt
